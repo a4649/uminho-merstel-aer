@@ -21,3 +21,16 @@ To download files from clients:
 ```cd /home/core/file-share/client```
 
 ```./client.py example1.txt```
+
+Virtual Machine image (VirtualBox)
+
+https://uminho365-my.sharepoint.com/:u:/g/personal/pg45517_uminho_pt/EXB_Eqw--VlPmKJubNdkJ4kBWZP4DmyAXC2q7_B-MhSMow?e=eOfUTO
+
+Note:
+ * it's afork from the image provided by University of Minho
+ * automatic login
+ * Xubuntu
+ * CORE 7.5.2
+ * Visual Studio Code
+
+Instructions: create a new virtual machine with VirtualBox, do not create disk image file, import this one
