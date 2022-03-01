@@ -1,5 +1,4 @@
-# AER
-Emergent Network Architectures
+# AER - Emergent Network Architectures curricular unit
 
 File Sharing project usage example
 
