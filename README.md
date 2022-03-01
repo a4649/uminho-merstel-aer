@@ -1,7 +1,7 @@
 # AER
 Emergent Network Architectures
 
-Usage example:
+File Sharing project usage example:
 
 To start the server:
 ```./server.py```
