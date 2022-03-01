@@ -22,13 +22,13 @@ To download files from clients:
 
 ```./client.py example1.txt```
 
-Virtual Machine image (VirtualBox)
+Virtual Machine image (VirtualBox):
 
 https://uminho365-my.sharepoint.com/:u:/g/personal/pg45517_uminho_pt/EXB_Eqw--VlPmKJubNdkJ4kBWZP4DmyAXC2q7_B-MhSMow?e=eOfUTO
 
 Note:
- * it's afork from the image provided by University of Minho
- * automatic login
+ * it's a fork from the image provided by University of Minho
+ * automatic login (password is 'core')
  * Xubuntu
  * CORE 7.5.2
  * Visual Studio Code
