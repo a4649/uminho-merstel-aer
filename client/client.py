@@ -5,11 +5,10 @@ import os
 
 TTL = 3
 BUFFER_SIZE = 1024
-IP_ADDR = '::1'
+IP_ADDR = '2001:690:2280:21::2'
 UDP_PORT = 9999
 
 def main(argv):
-    print("hello")
     filename = sys.argv[1]
 
     c = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
@@ -23,11 +22,18 @@ def main(argv):
         c.close()
         sys.exit(0)
 
-    if os.path.exists(filename):
-        os.remove(filename)
+    final = os.path.join('/home/core/file-share/client',filename)
+
+    if os.path.exists(final):
+        os.remove(final)
 
     if message == 'file-found':
-        print("Downloading...")
+        try:
+            os.remove(final)
+        except Exception:
+            pass
+            
+    print("Downloading...")
         
     file = open(filename,'wb')
 
@@ -37,11 +43,16 @@ def main(argv):
             file.write(data)
             c.settimeout(TTL)
             data, addr = c.recvfrom(BUFFER_SIZE)
-    except:
+    except Exception:
         file.close()
         c.close()
 
-    print("Successfully downloaded!")
+    file.close()
+    c.close()
+    
+    if os.path.isfile(final):
+        print(filename + " successfully downloaded!")
 
+        
 if __name__ == "__main__":
     main(sys.argv[1:])
