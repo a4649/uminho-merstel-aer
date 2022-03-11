@@ -19,7 +19,7 @@ To download files from clients:
 
 ```cd /home/core/file-share/client```
 
-```./client.py example1.txt```
+```./client.py file1.txt```
 
 Virtual Machine image (VirtualBox):
 
