@@ -1,6 +1,6 @@
 # AER - Emergent Network Architectures curricular unit
 
-File Sharing project usage example
+File Sharing project usage example 
 
 Open two linux terminals, enter folder and run scripts
 
