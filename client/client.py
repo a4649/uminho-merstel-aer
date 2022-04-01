@@ -5,7 +5,7 @@ import os
 
 TTL = 3
 BUFFER_SIZE = 1024
-IP_ADDR = '2001:690:2280:21::2'
+IP_ADDR = '2001:0690:2280:0820:33::2'
 UDP_PORT = 9999
 
 def main(argv):
