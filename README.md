@@ -9,7 +9,7 @@ Note:
  * if you are testing inside CORE, ensure the line number 8 of the python scripts is set to the server interface address (2001:680:2280:21::2)
 
 
-To start the server:
+To start the server (host c1):
 
 ```cd /home/core/file-share/server```
 
