@@ -33,3 +33,10 @@ Note:
  * Visual Studio Code
 
 Instructions: create a new virtual machine with VirtualBox, do not create disk image file, import this one
+
+
+**DNS**
+
+In order to use DNS names for ping with name of the node copy the hosts file to your CORE host:
+
+```sudo cp Downloads/hosts /etc/hosts```
