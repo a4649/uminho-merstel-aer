@@ -9,7 +9,11 @@ IP_ADDR = '2001:0690:2280:0820:33::2'
 UDP_PORT = 9999
 
 def main(argv):
-    filename = sys.argv[1]
+    filename = ''
+    try:
+        filename = sys.argv[1]
+    except IndexError:
+        filename = 'file-list'
 
     c = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
     c.settimeout(TTL)
@@ -21,7 +25,13 @@ def main(argv):
         print("{} not found on server".format(filename))
         c.close()
         sys.exit(0)
-
+    
+    if 'file-list' in message:
+        result = message.replace('file-list:','')
+        print("Available files on server:\n{}".format(result))
+        c.close()
+        sys.exit(0)
+        
     final = os.path.join('/home/core/file-share/client',filename)
 
     if os.path.exists(final):
