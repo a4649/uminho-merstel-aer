@@ -21,6 +21,9 @@ To download files from clients:
 
 ```./client.py file1.txt```
 
+To list files on server from client, just run the client code withou any argument:
+```./client.py```
+
 Virtual Machine image (VirtualBox):
 
 https://uminho365-my.sharepoint.com/:u:/g/personal/pg45517_uminho_pt/EXB_Eqw--VlPmKJubNdkJ4kBWZP4DmyAXC2q7_B-MhSMow?e=eOfUTO
