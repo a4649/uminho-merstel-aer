@@ -45,7 +45,7 @@ def main(argv):
             
     print("Downloading...")
         
-    file = open(filename,'wb')
+    file = open(os.path.join('Downloads',filename),'wb')
 
     data,addr = c.recvfrom(BUFFER_SIZE)
     try:
