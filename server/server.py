@@ -9,6 +9,11 @@ IP_ADDR = '::1'
 UDP_PORT = 9999
 BUFFER_SIZE = 1024
 
+def get_files():
+    file_list = os.listdir('files')
+    final = "file-list: "
+    return final.join(file_list)
+
 def handle_client(connection, file_name, client_addr):
     """ Check if requested file exists and send it to client
     Args:
@@ -16,6 +21,12 @@ def handle_client(connection, file_name, client_addr):
         file_name: requested file
         client_addr: tupple with (ip,port)
     """
+    if file_name.decode('utf-8') == 'file-list':
+        list_of_files = get_files()
+        print('Sending list fo files:\n {}'.format(list_of_files))
+        connection.sendto(list_of_files.encode(), client_addr)
+        return
+    
     file_path = os.path.join('files', file_name.decode('utf-8'))
     if not os.path.isfile(file_path):
         print("{} not found".format(file_path))
