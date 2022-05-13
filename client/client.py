@@ -2,66 +2,114 @@
 import socket
 import sys
 import os
+import hashlib
 
 TTL = 3
-BUFFER_SIZE = 1024
-IP_ADDR = '2001:0690:2280:0820:33::2'
-UDP_PORT = 9999
+BUFFER_SIZE = 2048
+#IP_ADDR = '2001:0690:2280:0820:33::2'
+IP_ADDR = '::1'
+UDP_CONTROL_PORT = 9999
+UDP_DATA_PORT = 9991
+
+client_socket = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+client_data_socket = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
+
+file_blocks_array = []
+
+def check_checksums(hash_a, hash_b):
+    return hash_a == hash_b
+
+def get_block_info(file, block_number):
+    client_socket.sendto(('block-info:' + file + ':' + block_number).encode(),(IP_ADDR, UDP_CONTROL_PORT))
+    response, server_addr = client_socket.recvfrom(BUFFER_SIZE)
+    return response
+
+def download_block(file, block_number):
+    print('REQUESTING BLOCK {}'.format(block_number))
+    client_socket.sendto(('file-data:' + file + ':' + str(block_number)).encode(),(IP_ADDR, UDP_CONTROL_PORT))
+    response, server_addr = client_socket.recvfrom(BUFFER_SIZE)
+    return response
+
+def get_checksum(bdata):
+    return hashlib.md5(bdata).hexdigest()
+
+def check_block(block):
+    rec_file = block.split(';'.encode())[0].decode('utf-8')
+    rec_block = block.split(';'.encode())[1].decode('utf-8')
+    tmp = block.replace(block.split(';'.encode())[0]+';'.encode(),''.encode())
+    rec_bdata = tmp.replace(block.split(';'.encode())[1] +';'.encode(),''.encode())
+
+    block_info = get_block_info(rec_file, rec_block)
+
+    block_info_file = block_info.split(':'.encode())[1].decode('utf-8')
+    block_info_block_num = block_info.split(':'.encode())[2].decode('utf-8')
+    block_info_checksum = block_info.split(':'.encode())[3].decode('utf-8')
+
+    if ((block_info_file == rec_file) and (block_info_block_num == rec_block) and (block_info_checksum == get_checksum(rec_bdata))):
+        return True
+
+    return False
+
+def get_file(file, blocks):
+    num_blocks = int(blocks)
+    
+    for i in range(num_blocks):
+        # download single block
+        tmp_block = download_block(file, i)
+        x = 0
+        # check if block (md5 checksum is correct, if not, download again, in loop)
+        while x < 1:
+            if check_block(tmp_block):
+                print("Block {} is correct!".format(tmp_block.split(';'.encode())[1].decode('utf-8')))
+                tmp = tmp_block.replace(tmp_block.split(';'.encode())[0]+';'.encode(),''.encode())
+                rec_bdata = tmp.replace(tmp_block.split(';'.encode())[1] +';'.encode(),''.encode())
+                file_blocks_array.insert(i, rec_bdata)
+                x = 2
+            else:
+                print("Block {} is invalid!".format(tmp_block.split(';'.encode())[1].decode('utf-8')))
+
+    try:
+        os.remove(file)
+    except Exception:
+        pass
+
+    # write file on disk
+    local_file = open(file,'wb')
+    for i in file_blocks_array:
+        try:
+            local_file.write(i)
+        except Exception:
+            local_file.close()
+    local_file.close()
+    sys.exit(0)
 
 def main(argv):
-    filename = ''
+    request = ''
     try:
-        filename = sys.argv[1]
+        request = 'file-info:' + sys.argv[1]
     except IndexError:
-        filename = 'file-list'
+        request = 'file-list'
 
-    c = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
-    c.settimeout(TTL)
-    c.sendto(filename.encode(), (IP_ADDR, UDP_PORT))
-    response, client_addr = c.recvfrom(BUFFER_SIZE)
+    client_socket.settimeout(TTL)
+    client_socket.sendto(request.encode(), (IP_ADDR, UDP_CONTROL_PORT))
+    response, server_addr = client_socket.recvfrom(BUFFER_SIZE)
     message = response.decode('utf8')
 
     if message == 'file-not-found':
-        print("{} not found on server".format(filename))
-        c.close()
+        print("{} not found on server".format(sys.argv[1]))
+        client_socket.close()
         sys.exit(0)
-    
+
     if 'file-list' in message:
         result = message.replace('file-list:','')
         print("Available files on server:\n{}".format(result))
-        c.close()
+        client_socket.close()
         sys.exit(0)
-        
-    final = os.path.join('/home/core/file-share/client',filename)
 
-    if os.path.exists(final):
-        os.remove(final)
-
-    if message == 'file-found':
-        try:
-            os.remove(final)
-        except Exception:
-            pass
-            
-    print("Downloading...")
-        
-    file = open(os.path.join('Downloads',filename),'wb')
-
-    data,addr = c.recvfrom(BUFFER_SIZE)
-    try:
-        while(data):
-            file.write(data)
-            c.settimeout(TTL)
-            data, addr = c.recvfrom(BUFFER_SIZE)
-    except Exception:
-        file.close()
-        c.close()
-
-    file.close()
-    c.close()
-    
-    if os.path.isfile(final):
-        print(filename + " successfully downloaded!")
+    if 'file-info' in message:
+        tmp_file = message.split(':')[1]
+        tmp_file_blocks = message.split(':')[2]
+        get_file(tmp_file, tmp_file_blocks)
 
         
 if __name__ == "__main__":
