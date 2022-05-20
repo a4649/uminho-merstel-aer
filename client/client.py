@@ -3,11 +3,12 @@ import socket
 import sys
 import os
 import hashlib
+import time
 
-TTL = 3
+TTL = 5
 BUFFER_SIZE = 2048
-#IP_ADDR = '2001:0690:2280:0820:33::2'
-IP_ADDR = '::1'
+IP_ADDR = '2001:0690:2280:0820:33::2'
+#IP_ADDR = '::1'
 UDP_CONTROL_PORT = 9999
 UDP_DATA_PORT = 9991
 
@@ -20,20 +21,43 @@ def check_checksums(hash_a, hash_b):
     return hash_a == hash_b
 
 def get_block_info(file, block_number):
-    client_socket.sendto(('block-info:' + file + ':' + block_number).encode(),(IP_ADDR, UDP_CONTROL_PORT))
-    response, server_addr = client_socket.recvfrom(BUFFER_SIZE)
-    return response
+    try:
+        client_socket.sendto(('block-info:' + file + ':' + block_number).encode(),(IP_ADDR, UDP_CONTROL_PORT))
+        response, server_addr = client_socket.recvfrom(BUFFER_SIZE)
+        return response
+    except socket.timeout as err:
+        print("Get timeout, tryng again in {} seconds...".format(TTL))
+        time.sleep(TTL)
+        return get_block_info(file, block_number)
+    except IOError as err:
+        if err.errno == 101:
+            print("Network is unreachable, trying again in {} seconds...".format(TTL))
+            time.sleep(TTL)
+            return get_block_info(file, block_number)
 
 def download_block(file, block_number):
-    print('REQUESTING BLOCK {}'.format(block_number))
-    client_socket.sendto(('file-data:' + file + ':' + str(block_number)).encode(),(IP_ADDR, UDP_CONTROL_PORT))
-    response, server_addr = client_socket.recvfrom(BUFFER_SIZE)
-    return response
+    try:
+        print('REQUESTING BLOCK {}'.format(block_number))
+        client_socket.sendto(('file-data:' + file + ':' + str(block_number)).encode(),(IP_ADDR, UDP_CONTROL_PORT))
+        response, server_addr = client_socket.recvfrom(BUFFER_SIZE)
+        return response
+    except socket.timeout as err:
+        print("Get timeout, tryng again in {} seconds...".format(TTL))
+        time.sleep(TTL)
+        return download_block(file, block_number)
+    except IOError as err:
+        if err.errno == 101:
+            print("Network is unreachable, trying again in {} seconds...".format(TTL))
+            time.sleep(TTL)
+            return download_block(file, block_number)
+
 
 def get_checksum(bdata):
     return hashlib.md5(bdata).hexdigest()
 
 def check_block(block):
+    if block is None:
+        return False
     rec_file = block.split(';'.encode())[0].decode('utf-8')
     rec_block = block.split(';'.encode())[1].decode('utf-8')
     tmp = block.replace(block.split(';'.encode())[0]+';'.encode(),''.encode())
@@ -81,6 +105,7 @@ def get_file(file, blocks):
         except Exception:
             local_file.close()
     local_file.close()
+    print("Download complete!")
     sys.exit(0)
 
 def main(argv):
