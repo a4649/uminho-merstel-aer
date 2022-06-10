@@ -13,7 +13,7 @@ IP_ADDR = '::1'
 UDP_CONTROL_PORT = 9999
 UDP_DATA_PORT = 9991
 BUFFER_SIZE = 2048
-BLOCK_SIZE = 960
+BLOCK_SIZE = 1984
 FILES_FOLDER = '/home/core/file-share/server/files'
 
 control_socket = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
