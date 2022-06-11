@@ -7,13 +7,11 @@ import time
 
 TTL = 5
 BUFFER_SIZE = 2048
-IP_ADDR = '2001:0690:2280:0820:33::2'
-#IP_ADDR = '::1'
+#IP_ADDR = '2001:0690:2280:0820:33::2'
+IP_ADDR = '::1'
 UDP_CONTROL_PORT = 9999
-UDP_DATA_PORT = 9991
 
 client_socket = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
-client_data_socket = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
 
 file_blocks_array = []
 
