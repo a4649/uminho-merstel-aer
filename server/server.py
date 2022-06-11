@@ -11,13 +11,11 @@ TTL = 5
 #IP_ADDR = '2001:0690:2280:0820:33::2'
 IP_ADDR = '::1'
 UDP_CONTROL_PORT = 9999
-UDP_DATA_PORT = 9991
 BUFFER_SIZE = 2048
 BLOCK_SIZE = 1984
 FILES_FOLDER = '/home/core/file-share/server/files'
 
 control_socket = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
-data_socket = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
 
 def get_checksum(bdata):
     return hashlib.md5(bdata).hexdigest()
@@ -153,7 +151,6 @@ def handle_client(request, client_addr):
 def main():
     try:
         control_socket.bind((IP_ADDR, UDP_CONTROL_PORT))
-        data_socket.bind((IP_ADDR, UDP_DATA_PORT))
         print("Accepting clients on {}:{}...".format(IP_ADDR, UDP_CONTROL_PORT))
         print("Press Ctrl+C to terminate")
     except socket.error:
@@ -167,7 +164,6 @@ def main():
             threading.Thread(target=handle_client(request,client_addr)).start()
         except KeyboardInterrupt:
             control_socket.close()
-            data_socket.close()
             sys.exit(0)
 
 
