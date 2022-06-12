@@ -44,8 +44,6 @@ In order to use DNS names for ping with name of the node copy the hosts file to 
 
 ```sudo cp Downloads/hosts /etc/hosts```
 
-Instructions: create a new virtual machine with VirtualBox, do not create disk image file, import this one
-
 Movement Generator:
 
 Run the python code
