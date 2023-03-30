@@ -1,6 +1,10 @@
-# AER - Emergent Network Architectures
+# Emergent Network Architectures
 
-Exercises and projects developed during the Emergent Network Architectures curricular unit of the Engineering of Computer Networks and Telematic Services from School of Engineering, University of Minho https://www.eng.uminho.pt/en/study/_layouts/15/UMinho.PortaisUOEI.UI/Pages/CatalogoCursoDetail.aspx?itemId=3929&catId=12
+Project developed during the Emergent Network Architectures curricular unit of the Engineering of Computer Networks and Telematic Services from School of Engineering, University of Minho https://www.eng.uminho.pt/en/study/_layouts/15/UMinho.PortaisUOEI.UI/Pages/CatalogoCursoDetail.aspx?itemId=3929&catId=12
+
+This project aims to develop an network application that must support mobility among the nodes of the network. To achieve the goal the work is divided into three main parts. The first one is to create the infra-structured network and integrate it with the nodes that are able to move - acting as an ad-hoc. Then, the application is developed, in our case, it is a file transfer application where nodes with mobility must be able to access and download files from the server in the infra-structured network. The last goal is to develop a DTN module that gives the nodes the capability to store and forward the packets, acting as a router and improving the network’s
+performance.
+
 
 File Sharing project usage example 
 
@@ -26,19 +30,6 @@ To download files from clients:
 To list files on server from client, just run the client code withou any argument:
 ```./client.py```
 
-Virtual Machine image (VirtualBox):
-
-https://uminho365-my.sharepoint.com/:u:/g/personal/pg45517_uminho_pt/EXB_Eqw--VlPmKJubNdkJ4kBWZP4DmyAXC2q7_B-MhSMow?e=eOfUTO
-
-Note:
- * it's a fork from the image provided by University of Minho
- * automatic login (password is 'core')
- * Xubuntu
- * CORE 7.5.2
- * Visual Studio Code
-
-Instructions: create a new virtual machine with VirtualBox, do not create disk image file, import this one
-
 
 **DNS**
 
@@ -46,7 +37,7 @@ In order to use DNS names for ping with name of the node copy the hosts file to 
 
 ```sudo cp Downloads/hosts /etc/hosts```
 
-Movement Generator:
+**Movement Generator**
 
 Run the python code
 Copy the output and paste it in .scen file
