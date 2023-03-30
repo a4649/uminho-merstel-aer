@@ -5,6 +5,7 @@ Project developed during the Emergent Network Architectures curricular unit of t
 This project aims to develop an network application that must support mobility among the nodes of the network. To achieve the goal the work is divided into three main parts. The first one is to create the infra-structured network and integrate it with the nodes that are able to move - acting as an ad-hoc. Then, the application is developed, in our case, it is a file transfer application where nodes with mobility must be able to access and download files from the server in the infra-structured network. The last goal is to develop a DTN module that gives the nodes the capability to store and forward the packets, acting as a router and improving the network’s
 performance.
 
+![diagram](core-topology.png)
 
 File Sharing project usage example 
 
